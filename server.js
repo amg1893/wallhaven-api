@@ -11,6 +11,11 @@ const cache = new Cache({
 })
 
 app.use(compression())
+app.use(function(req, res, next) {
+	  res.header("Access-Control-Allow-Origin", "*");
+	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	  next();
+});
 
 app.get('/', (req, res) => {
   res.end(`
@@ -66,6 +71,6 @@ app.get('/details/:id', cacheMiddleWare, handleError(async (req, res) => {
   res.send(fetched)
 }))
 
-app.listen(3000)
+app.listen(process.env.PORT || 3000)
 
-console.log('> Open http://localhost:3000')
+console.log('> Open http://localhost:'+process.env.PORT || 3000)

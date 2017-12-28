@@ -21,21 +21,6 @@
   "jest": {
     "testEnvironment": "node"
   },
-  "now": {
-    "alias": "wallhaven-api.now.sh",
-    "files": [
-      "index.js",
-      "server.js"
-    ]
-  },
-  "devDependencies": {
-    "compression": "^1.6.2",
-    "eslint-config-rem": "^3.0.0",
-    "express": "^4.15.2",
-    "jest-cli": "^18.1.0",
-    "lru-cache": "^4.0.2",
-    "xo": "^0.17.1"
-  },
   "xo": {
     "extends": "rem",
     "esnext": true,
@@ -48,6 +33,12 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
-    "cheerio": "^0.22.0"
+    "express": "^4.15.2",
+    "cheerio": "^0.22.0",
+    "compression": "^1.6.2",
+    "eslint-config-rem": "^3.0.0",
+    "jest-cli": "^18.1.0",
+    "lru-cache": "^4.0.2",
+    "xo": "^0.17.1"
   }
 }
