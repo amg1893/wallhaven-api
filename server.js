@@ -1,6 +1,7 @@
 const express = require('express')
 const Cache = require('lru-cache')
 const compression = require('compression')
+const axios = require('axios')
 const Wall = require('./')
 
 const app = express()
@@ -19,8 +20,17 @@ app.use(function(req, res, next) {
 
 app.get('/', (req, res) => {
   res.end(`
-GET /search?keyword="keyword"
+# Search wallpaper by keyword => JSON
+GET /search?keyword=keyword
+
+# Get wallpaper by ID => JSON
 GET /details/:id
+
+# Display random wallpaper
+GET /random
+
+# More
+https://github.com/moeoverflow/wallhaven
 `)
 })
 
@@ -69,6 +79,27 @@ app.get('/details/:id', cacheMiddleWare, handleError(async (req, res) => {
   const fetched = await api.details(req.params.id)
   cache.set(req.url, fetched)
   res.send(fetched)
+}))
+
+app.get('/random', handleError(async (req, res) => {
+  const { images } = await api.search(req.query.keyword, Object.assign({}, req.query, {
+    sorting: 'random'
+  }))
+  const image = await api.details(images[0].id)
+  if (req.query.json === '') {
+    return res.send(image)
+  }
+  if (req.query.redirect !== 'false') {
+    return res.redirect(image.fullImage)
+  }
+  const response = await axios({
+    method: 'get',
+    url: image.fullImage,
+    responseType: 'stream'
+  })
+  const type = /\.png$/.test(image.fullImage) ? 'png' : 'jpeg'
+  res.type(type)
+  response.data.pipe(res)
 }))
 
 app.listen(process.env.PORT || 3000)
