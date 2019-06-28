@@ -65,6 +65,7 @@ function handleError(fn) {
           message: err.message
         })
       }
+      console.error(err)
     }
   }
 }
@@ -85,6 +86,7 @@ app.get('/random', handleError(async (req, res) => {
   const { images } = await api.search(req.query.keyword, Object.assign({}, req.query, {
     sorting: 'random'
   }))
+  console.log(images);
   const image = await api.details(images[0].id)
   if (req.query.json === '') {
     return res.send(image)

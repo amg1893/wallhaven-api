@@ -34,7 +34,7 @@ module.exports = class Wallhaven {
     categories = getCategories(categories)
     const purity = `${Number(!nsfw)}${Number(sketchy)}0`
 
-    return recrawler(`https://alpha.wallhaven.cc/search?q=${keyword}&categories=${categories}&page=${page}&purity=${purity}&sorting=${sorting}&order=desc`)
+    return recrawler(`https://wallhaven.cc/search?q=${keyword}&categories=${categories}&page=${page}&purity=${purity}&sorting=${sorting}&order=desc`)
       .then($ => {
         const result = {
           end: !$('.next').length,
@@ -42,14 +42,15 @@ module.exports = class Wallhaven {
           images: []
         }
         $('.thumb-listing-page ul li').each(function () {
-          const id = Number($(this).find('.thumb').attr('data-wallpaper-id'))
+          console.log()
+          const id = $(this).find('.thumb').attr('data-wallpaper-id')
           const resolution = getResolution($(this).find('.wall-res').text())
 
           result.images.push({
             id,
             width: resolution[0],
             height: resolution[1],
-            thumb: `https://alpha.wallhaven.cc/wallpapers/thumb/small/th-${id}.jpg`
+            thumb: `https://wallhaven.cc/wallpapers/thumb/small/th-${id}.jpg`
           })
         })
         return result
@@ -57,12 +58,12 @@ module.exports = class Wallhaven {
   }
 
   details(id) {
-    return recrawler(`https://alpha.wallhaven.cc/wallpaper/${id}`)
+    return recrawler(`https://wallhaven.cc/w/${id}`)
       .then($ => {
         const tags = []
         $('.tag').each(function () {
           tags.push({
-            id: Number($(this).attr('data-tag-id')),
+            id: $(this).attr('data-tag-id'),
             text: $(this).find('.tagname').text()
           })
         })
